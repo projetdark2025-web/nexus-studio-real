@@ -1,1 +1,16 @@
 
+{
+  "name": "NEXUS STUDIO REAL",
+  "short_name": "Nexus Studio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#e91e63",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3096/3096673.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
