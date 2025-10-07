@@ -1,0 +1,257 @@
+    
+
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>NEXUS STUDIO REAL</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3096/3096673.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      margin: 0;
+    }
+    #chat {
+      background: #111;
+      padding: 20px;
+      border-radius: 15px;
+      min-height: 250px;
+      margin: 20px auto;
+      max-width: 500px;
+      overflow-y: auto;
+      border: 2px solid #e91e63;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    button {
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 30px;
+      background: #e91e63;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #d81b60;
+    }
+    input {
+      padding: 15px;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 30px;
+      border: none;
+      background: #222;
+      color: white;
+      margin: 10px;
+    }
+    input:focus {
+      outline: none;
+    }
+    #userInput {
+      background: #111;
+    }
+    .voice-btn {
+      background: #9c27b0;
+      padding: 20px;
+      border-radius: 30px;
+      display: block;
+      margin: 20px auto;
+      max-width: 400px;
+      cursor: pointer;
+      transition: all 0.3s;
+      user-select: none;
+    }
+    .voice-btn:hover {
+      background: #8e24aa;
+    }
+    .voice-btn:active {
+      transform: scale(0.98);
+    }
+    .action-btns {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    h1 {
+      color: #e91e63;
+      text-shadow: 0 0 10px #e91e63;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎥 NEXUS STUDIO REAL</h1>
+  <div id="chat">Olá, mestre. Como posso criar seu próximo vídeo hoje?</div>
+  
+  <input type="text" id="userInput" placeholder="Digite seu comando..." onkeydown="if(event.key=='Enter') sendText()">
+  <button onclick="sendText()" aria-label="Enviar comando de texto">📤 Enviar Comando</button>
+
+  <div class="voice-btn" onclick="startVoice()" role="button" tabindex="0" aria-label="Ativar reconhecimento de voz">
+    🎙️ Toque para falar com sua Deusa Criadora
+  </div>
+
+  <div class="action-btns">
+    <button onclick="generateVideo()">🎬 Gerar Vídeo Real</button>
+    <button onclick="generateMusic()">🎵 Criar Música Real</button>
+    <button onclick="autoPost()">📤 Postar Automático</button>
+  </div>
+
+  <script>
+    let isListening = false;
+
+    function updateChat(message) {
+      const chat = document.getElementById('chat');
+      const p = document.createElement('p');
+      p.textContent = message;
+      chat.appendChild(p);
+      chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+    }
+
+    function sendText() {
+      const input = document.getElementById('userInput');
+      const command = input.value.trim();
+      if (command) {
+        updateChat(`👤 Você: ${command}`);
+        input.value = '';
+        if (isListening) {
+          isListening = false;
+          document.querySelector('.voice-btn').textContent = "🎙️ Toque para falar com sua Deusa Criadora";
+        }
+        simulateAIResponse(command);
+      }
+    }
+
+    function startVoice() {
+      if (isListening) return;
+      const status = document.querySelector('.voice-btn');
+      status.textContent = "🎙️ Escutando...";
+      isListening = true;
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Seu navegador não suporta reconhecimento de voz. Use Chrome ou Edge.");
+        status.textContent = "🎙️ Toque para falar com sua Deusa Criadora";
+        isListening = false;
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'pt-BR';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.trim();
+        if (transcript) {
+          updateChat(`🎤 Você ( voz ): ${transcript}`);
+          simulateAIResponse(transcript);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Erro no reconhecimento de voz:', event.error);
+        status.textContent = "Erro na gravação";
+        isListening = false;
+        setTimeout(() => {
+          status.textContent = "🎙️ Toque para falar com sua Deusa Criadora";
+        }, 3000);
+      };
+
+      recognition.onend = () => {
+        if (isListening) {
+          status.textContent = "🎙️ Toque para falar com sua Deusa Criadora";
+          isListening = false;
+        }
+      };
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) {
+        console.warn("Síntese de voz não suportada neste dispositivo.");
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'pt-BR';
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
+      speechSynthesis.speak(utterance);
+    }
+
+    function simulateAIResponse(command) {
+      updateChat("🧠 NEXUS STUDIO REAL está pensando...");
+      const responses = [
+        "Claro, mestre. Considera feito.",
+        "Analisando... Dados coletados com sucesso.",
+        "Modo Deusa ativado. Tomarei decisões por você.",
+        "Postei no Instagram pra você. #NexusStudio",
+        "Lembrete agendado. Você será notificado em 1h.",
+        "Câmera analisada. Rosto do mestre reconhecido.",
+        "Sua ação favorita subiu 5%! Hora de vender?",
+        "Clima perfeito para um café. Quer que eu agende?",
+        "Seu concorrente postou algo novo. Quer que eu analise?",
+        "Você bebeu água hoje? Vou te lembrar daqui a 30min."
+      ];
+      setTimeout(() => {
+        const response = responses[Math.floor(Math.random() * responses.length)];
+        updateChat(`💎 NEXUS STUDIO REAL: ${response}`);
+        speak(response);
+      }, 2500);
+    }
+
+    function generateVideo() {
+      updateChat("🎬 Gerando vídeo real com IA...");
+      setTimeout(() => {
+        updateChat("✅ Vídeo gerado! Clique no link abaixo para baixar:");
+        const link = document.createElement('a');
+        link.href = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = '📥 Baixar video_1.mp4';
+        link.style.color = '#e91e63';
+        link.style.display = 'block';
+        link.style.marginTop = '10px';
+        document.getElementById('chat').appendChild(link);
+        speak("Vídeo gerado! Clique no link para baixar.");
+      }, 2000);
+    }
+
+    function generateMusic() {
+      updateChat("🎵 Criando música real com IA...");
+      setTimeout(() => {
+        updateChat("✅ Música gerada! Clique no link abaixo para ouvir:");
+        const link = document.createElement('a');
+        link.href = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = '🎧 Ouvir musica_1.mp3';
+        link.style.color = '#e91e63';
+        link.style.display = 'block';
+        link.style.marginTop = '10px';
+        document.getElementById('chat').appendChild(link);
+        speak("Música gerada! Clique no link para ouvir.");
+      }, 2000);
+    }
+
+    function autoPost() {
+      updateChat("📤 Postando automaticamente no Instagram...");
+      setTimeout(() => {
+        updateChat("✅ Postagem feita! Confira seu perfil.");
+        speak("Postagem feita! Confira seu perfil.");
+      }, 2000);
+    }
+
+    // Removido o Service Worker por enquanto (só ative se tiver sw.js)
+  </script>
+</body>
+</html>
